@@ -2,8 +2,6 @@ text.usetex: True
 text.latex.preamble: \usepackage{stix2,siunitx,amsmath,amssymb,isomath,physics}\usepackage[version=4]{mhchem}
 font.family: serif
 font.size: 10
-axes.spines.top: False
-axes.spines.right: False
 axes.titlesize: 10
 axes.labelsize: 10
 xtick.labelsize: 10
