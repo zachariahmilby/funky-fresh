@@ -284,7 +284,7 @@ def set_caltech_thesis_style():
     Get the available colors from the Caltech neutral colors dictionary:
     >>> style = set_caltech_thesis_style()
     >>> style.caltech_neutral_colors.keys()
-    dict_keys(['PMS Cool Gray 9', 'PMS Cool Grey 3c', 'PMS 414', 'PMS 5497c', 'PMS 7494c', 'PMS 451c', 'PMS 7403c'])
+    dict_keys(['PMS Cool Gray 9', 'PMS Cool Gray 3c', 'PMS 414', 'PMS 5497c', 'PMS 7494c', 'PMS 451c', 'PMS 7403c'])
 
     Get the available colors from the Caltech deep colors dictionary:
     >>> style = set_caltech_thesis_style()
