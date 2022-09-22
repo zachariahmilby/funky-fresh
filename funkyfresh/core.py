@@ -24,7 +24,7 @@ personal_color_dict = {
 caltech_orange = '#FF6C0C'  # Pantone PMS 1585c Orange
 caltech_neutral_colors = {
     'PMS Cool Gray 9': '#76777B',
-    'PMS Cool Grey 3c': '#C8C8C8',
+    'PMS Cool Gray 3c': '#C8C8C8',
     'PMS 414': '#AAA99F',
     'PMS 5497c': '#849895',
     'PMS 7494c': '#9DAE88',
