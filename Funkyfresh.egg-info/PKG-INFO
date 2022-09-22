@@ -1,0 +1,8 @@
+Metadata-Version: 2.1
+Name: Funkyfresh
+Version: 1.3.1
+Summary: A simple package which sets Matplotlib styles to match select scientific journals.
+Home-page: https://github.com/zachariahmilby/science-journal-graphics-styles
+Author: Zachariah Milby
+Provides-Extra: test
+License-File: LICENSE

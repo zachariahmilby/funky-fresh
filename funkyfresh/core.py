@@ -3,7 +3,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 
 
-personal_color_dict = {
+standard_color_dict = {
     'red': '#D62728',
     'orange': '#FF7F0E',
     'yellow': '#FDB813',
@@ -72,6 +72,10 @@ class AAS:
     def page_width(self) -> float:
         return 7.3
 
+    @property
+    def colors(self) -> dict:
+        return standard_color_dict
+
 
 class AGU:
 
@@ -94,6 +98,10 @@ class AGU:
     def blue(self) -> str:
         return '#004174'
 
+    @property
+    def colors(self) -> dict:
+        return standard_color_dict
+
 
 class PersonalWhitepaper:
 
@@ -106,7 +114,7 @@ class PersonalWhitepaper:
 
     @property
     def colors(self) -> dict:
-        return personal_color_dict
+        return standard_color_dict
 
 
 class CaltechThesis:
@@ -131,6 +139,10 @@ class CaltechThesis:
         return caltech_bright_colors
 
     @property
+    def colors(self) -> dict:
+        return standard_color_dict
+
+    @property
     def text_width(self) -> float:
         return 5.5206
 
@@ -147,6 +159,8 @@ def set_aas_style():
         Width for a column-width figure in inches.
     page_width : float
         Width for a page-width figure in inches.
+    colors : dict
+        A dictionary containing standard colors.
 
     Examples
     --------
@@ -159,6 +173,11 @@ def set_aas_style():
     >>> style = set_aas_style()
     >>> style.page_width
     7.3
+
+    Get the available colors from the custom color dictionary:
+    >>> style = set_aas_style()
+    >>> style.colors.keys()
+    dict_keys(['red', 'orange', 'yellow', 'green', 'blue', 'violet', 'cyan', 'magenta', 'brown', 'darkgrey', 'grey', 'lightgrey', 'black', 'white'])
     """
     return AAS()
 
@@ -181,6 +200,8 @@ def set_agu_style():
         Width for a page-width figure in inches.
     blue : str
         Hexadecimal string for AGU blue color #004174.
+    colors : dict
+        A dictionary containing standard colors.
 
     Examples
     --------
@@ -199,10 +220,15 @@ def set_agu_style():
     >>> style.page_width
     7.5
 
-    Get the AGU blue color as a hexadecimal string
+    Get the AGU blue color as a hexadecimal string:
     >>> style = set_agu_style()
     >>> style.blue
     '#004174'
+
+    Get the available colors from the custom color dictionary:
+    >>> style = set_agu_style()
+    >>> style.colors.keys()
+    dict_keys(['red', 'orange', 'yellow', 'green', 'blue', 'violet', 'cyan', 'magenta', 'brown', 'darkgrey', 'grey', 'lightgrey', 'black', 'white'])
     """
     return AGU()
 
@@ -217,7 +243,7 @@ def set_personal_whitepaper_style():
     page_width : float
         LaTeX 10-pt article class default text width.
     colors : dict
-        My custom color dictionary.
+        A dictionary containing standard colors.
 
     Examples
     --------
@@ -266,11 +292,18 @@ def set_caltech_thesis_style():
         temper of a piece from subtle to bold. These colors should be used as
         accents to the primary, neutral, and deep colors, and carefully
         selected based on what is appropriate to the tone of the piece.
+    colors : dict
+        A dictionary containing standard colors.
     text_width : float
         Width for a text-block-width figure in inches.
 
     Examples
     --------
+    Get the largest possible figure width:
+    >>> style = set_caltech_thesis_style()
+    >>> style.text_width
+    5.5206
+
     Get the ubiquitous Caltech orange color:
     >>> style = set_caltech_thesis_style()
     >>> style.caltech_orange
@@ -295,11 +328,11 @@ def set_caltech_thesis_style():
     >>> style = set_caltech_thesis_style()
     >>> style.caltech_bright_colors.keys()
     dict_keys(['PMS 299c', 'PMS 7473c', 'PMS 7489c', 'PMS 7408c', 'PMS 605c', 'PMS 1915c'])
+
+    Get the available colors from the custom color dictionary:
+    >>> style = set_caltech_thesis_style()
+    >>> style.colors.keys()
+    dict_keys(['red', 'orange', 'yellow', 'green', 'blue', 'violet', 'cyan', 'magenta', 'brown', 'darkgrey', 'grey', 'lightgrey', 'black', 'white'])
     """
 
     return CaltechThesis()
-
-
-if __name__ == "__main__":
-    style = set_caltech_thesis_style()
-    print(style.caltech_orange)
