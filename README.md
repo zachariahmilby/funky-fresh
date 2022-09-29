@@ -102,3 +102,24 @@ axis.set_ylabel(r'$\sin(\theta)$')
 plt.show()
 ```
 ![](funkyfresh/anc/funkyfresh.png)
+
+You can also easily invert the colors by using the standard 
+`plt.style.use('dark_background')`.
+```
+import astropy.units as u
+import matplotlib.pyplot as plt
+import numpy as np
+from funkyfresh import set_agu_style
+
+style = set_agu_style()
+plt.style.use('dark_background')
+
+theta = np.linspace(0, 360, 3601) * u.degree
+
+fig, axis = plt.subplots(figsize=(style.column_width, 2), constrained_layout=True)
+axis.plot(theta, np.sin(theta))
+axis.set_xlabel(r'$\theta$ [degrees]')
+axis.set_ylabel(r'$\sin(\theta)$')
+plt.show()
+```
+![](funkyfresh/anc/funkyfresh_dark.png)
