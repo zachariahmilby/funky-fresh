@@ -8,6 +8,7 @@ xtick.labelsize: 10
 ytick.labelsize: 10
 legend.fontsize: 10
 figure.titlesize: 10
+figure.labelsize: 10
 lines.linewidth: 0.8
 lines.markeredgecolor: none
 lines.markeredgewidth: 0
