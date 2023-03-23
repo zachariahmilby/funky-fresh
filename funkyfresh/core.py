@@ -147,6 +147,35 @@ class CaltechThesis:
         return 5.5206
 
 
+class LaTeX:
+
+    def __init__(self, fontsize: int = 10):
+        self._fontsize = self._check_fontsize(fontsize)
+        _set_style(f'latex_{self._fontsize}pt')
+
+    @staticmethod
+    def _check_fontsize(fontsize: int):
+        if fontsize not in [10, 11, 12]:
+            raise Exception('Supported font sizes (in points): 10, 11, 12')
+        else:
+            return fontsize
+
+    @property
+    def colors(self) -> dict:
+        return standard_color_dict
+
+    @property
+    def page_width(self) -> float:
+        if self._fontsize == 10:
+            return 4.79167
+        elif self._fontsize == 11:
+            return 5.0
+        elif self._fontsize == 12:
+            return 5.41667
+        else:
+            return 6.5
+
+
 def set_aas_style():
     """
     Sets graphics style to match American Astronomical Society journals.
@@ -336,3 +365,41 @@ def set_caltech_thesis_style():
     """
 
     return CaltechThesis()
+
+
+def set_latex_default_style(fontsize: int = 10):
+    """
+    Sets graphics style to match the default LaTeX Computer Modern fonts.
+    Also has a custom color dictionary.
+
+    Parameters
+    ----------
+    fontsize : int
+        The fontsize. Currently supported sizes in points are 10, 11 and 12.
+
+    Properties
+    ----------
+    page_width : float
+        LaTeX article class default text width.
+    colors : dict
+        A dictionary containing standard colors.
+
+    Examples
+    --------
+    Get the text-width in inches for 11-point font:
+    >>> style = set_latex_default_style(fontsize=11)
+    >>> style.page_width
+    5.0
+
+    Get the blue color from the custom color dictionary:
+    >>> style = set_personal_whitepaper_style()
+    >>> style.colors['blue']
+    '#0079C1'
+
+    Get the available colors from the custom color dictionary:
+    >>> style = set_personal_whitepaper_style()
+    >>> style.colors.keys()
+    dict_keys(['red', 'orange', 'yellow', 'green', 'blue', 'violet', 'cyan', 'magenta', 'brown', 'darkgrey', 'grey', 'lightgrey', 'black', 'white'])
+    """
+
+    return LaTeX(fontsize=fontsize)
