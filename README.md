@@ -64,8 +64,8 @@ pass a dictionary containing the parameter and the new value. Check the
 Matplotlib [rcParams documentation](https://matplotlib.org/stable/tutorials/introductory/customizing.html) 
 for options. For example, to change only the font size to 24 pt:
 ```
-style = {'font.size': 24}
-ffs.set_custom_style(rcparams=style)
+>>> style = {'font.size': 24}
+>>> ffs.set_custom_style(rcparams=style)
 ```
 
 Once you've set a style, you can access two style properties through the `ffs` 
@@ -81,9 +81,8 @@ The `figure_widths` property has a set of figure width measurements appropriate
 to the journal(s) you've selected. For example, with the AGU style, you could 
 have a column-width figure, a text-width figure or a page-width figure.
 ```
-ffs.figure_widths
-
->>> {'column_width': 3.5, 'text_width': 5.6, 'page_width': 7.5}
+>>> ffs.figure_widths
+{'column_width': 3.5, 'text_width': 5.6, 'page_width': 7.5}
 ```
 All of these are available in the `ffs` object after you set the style.
 
@@ -91,8 +90,8 @@ All of these are available in the `ffs` object after you set the style.
 There is also a context manager available if you want to temporarily change to 
 a named style:
 ```
-with ffs.named_style_context(named_style='AGU'):
-    plt.plot(...)
+>>> with ffs.named_style_context(named_style='AGU'):
+>>>     plt.plot(...)
 ```
 
 ### LaTeX Rendering
@@ -104,7 +103,7 @@ your figures.
 #### Named Style
 For a named style, set `use_latex` to `True` when setting:
 ```
-ffs.set_named_style('AAS', use_latex=True) 
+>>> ffs.set_named_style('AAS', use_latex=True) 
 ```
 
 The default packages loaded are `siunitx`, `amsmath`, `amssymb`, `isomath`, 
@@ -113,8 +112,8 @@ Modern default, you can set that package explicitly. You can also pass options
 for the font package. For example, to use the excellent STIX2 font set with 
 upright integrals (in LaTeX format `\usepackage[upint]{stix2}`):
 ```
-ffs.set_named_style('AAS', use_latex=True, latex_font_package='stix2', 
-                    latex_font_options='upint') 
+>>> ffs.set_named_style('AAS', use_latex=True, latex_font_package='stix2', 
+>>>                     latex_font_options='upint') 
 ```
 
 You can also load any additional packages after this. You must explicitly pass
@@ -123,7 +122,7 @@ Because of the blackslashes, you'll want this to be a raw string (note the `r`
 before the opening single quote), As a terrible example, to load the `geometry` 
 package with one-inch margins and the `hyperref` package: 
 ```
-additional_latex_packages = r'\usepackage[margin=1in]{geometry}\usepackage{hyperref}'
+>>> additional_latex_packages = r'\usepackage[margin=1in]{geometry}\usepackage{hyperref}'
 ```
 
 #### Custom Style
@@ -132,8 +131,8 @@ you. There are no default packages loaded. You simply set `use_latex=True` then
 pass every package you want to use as a single-line raw string to 
 `latex_preamble`. For example:
 ```
-latex_preamble = r'\usepackage[upint]{stix2}\usepackage{amsmath, physics}'
-ffs.set_custom_style(use_latex=True, latex_preamble=latex_preamble)
+>>> latex_preamble = r'\usepackage[upint]{stix2}\usepackage{amsmath, physics}'
+>>> ffs.set_custom_style(use_latex=True, latex_preamble=latex_preamble)
 ```
 
 ## Example
