@@ -15,8 +15,7 @@ compared to the Matplotlib defaults).
   - Astrophysical Journal (ApJ)
   - Planetary Science Journal (PSJ)
 - Caltech Thesis/Dissertation:
-  - Includes olor dictionaries from the Caltech Identity Toolkit 
-  - (https://identity.caltech.edu).
+  - Includes colors from the Caltech Identity Toolkit (https://identity.caltech.edu)
 
 ## Installation
 Here are some installation instructions for the average Anaconda user, if 
