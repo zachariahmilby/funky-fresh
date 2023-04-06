@@ -7,7 +7,7 @@ from funkyfresh.colors import *
 _aas = {
 
     'fontfamily': 'serif',
-    'font': 'Times',
+    'font': 'Times New Roman',
     'mathtext.fontset': 'stix',
     'fontsize': 8,
     'linewidths': 0.397,
@@ -38,6 +38,25 @@ _agu = {
 }
 
 
+# ============================== #
+# Astronomy & Astrophysics Style #
+# ============================== #
+
+_aa = {
+    'fontfamily': 'serif',
+    'font': 'Times New Roman',
+    'mathtext.fontset': 'stix',
+    'fontsize': 8,
+    'linewidths': 0.5,
+    'figsize': (7.283, 4.501),
+    'latex_font_package': 'stix',
+    'latex_preamble': r'\usepackage{siunitx, amsmath, amssymb, '
+                      r'isomath, physics}\usepackage[version = 4]{mhchem}',
+    'figurewidths': {'column': 3.543, 'page': 7.283},
+    'colors': [{'aa_blue': '#0000FF'}],
+}
+
+
 # ======================== #
 # Caltech PhD Thesis Style #
 # ======================== #
@@ -47,7 +66,7 @@ _caltech_thesis = {
     'fontfamily': 'serif',
     'font': 'Times',
     'mathtext.fontset': 'stix',
-    'fontsize': 12,
+    'fontsize': 10,
     'linewidths': 0.4,
     'figsize': (5.5206, 3.4119),
     'latex_font_package': 'stix',
@@ -62,5 +81,6 @@ _caltech_thesis = {
 _named_styles = {
     'AAS': _aas,
     'AGU': _agu,
+    'A&A': _aa,
     'Caltech Thesis': _caltech_thesis,
 }

@@ -14,6 +14,7 @@ compared to the Matplotlib defaults).
   - Astronomical Journal (AJ)
   - Astrophysical Journal (ApJ)
   - Planetary Science Journal (PSJ)
+- Astronomy & Astrophysics (A&A)
 - Caltech Thesis/Dissertation:
   - Includes colors from the Caltech Identity Toolkit (https://identity.caltech.edu)
 

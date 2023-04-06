@@ -217,6 +217,12 @@ class FunkyFresh:
         >>> ffs.colors['agu_blue']
         '#004174'
 
+        Set A&A journal style and get the (garish) custom blue color:
+        >>> ffs = FunkyFresh()
+        >>> ffs.set_named_style('A&A')
+        >>> ffs.colors['aa_blue']
+        '#0000FF'
+
         Set Caltech Thesis style and get the Caltech orange color:
         >>> ffs = FunkyFresh()
         >>> ffs.set_named_style('Caltech Thesis')
@@ -346,7 +352,7 @@ class FunkyFresh:
         Get the column-width in inches:
         >>> ffs = FunkyFresh()
         >>> ffs.get_available_styles()
-        ['AAS', 'AGU', 'Caltech Thesis']
+        ['AAS', 'AGU', 'A&A', 'Caltech Thesis']
         """
         return _named_style_options
 
