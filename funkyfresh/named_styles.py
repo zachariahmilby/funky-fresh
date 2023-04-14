@@ -9,7 +9,7 @@ _aas = {
     'fontfamily': 'serif',
     'font': 'Times New Roman',
     'mathtext.fontset': 'stix',
-    'fontsize': 8,
+    'fontsize': 9,
     'linewidths': 0.397,
     'figsize': (7.3, 4.51165),
     'latex_font_package': 'stix',
