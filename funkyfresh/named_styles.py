@@ -46,7 +46,7 @@ _aa = {
     'fontfamily': 'serif',
     'font': 'Times New Roman',
     'mathtext.fontset': 'stix',
-    'fontsize': 8,
+    'fontsize': 9,
     'linewidths': 0.5,
     'figsize': (7.283, 4.501),
     'latex_font_package': 'stix',
