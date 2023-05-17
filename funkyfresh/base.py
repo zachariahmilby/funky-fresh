@@ -1,6 +1,7 @@
 import matplotlib
 from funkyfresh.named_styles import _named_styles
 from funkyfresh.colors import standard_color_dict
+import textwrap
 
 # get named style options
 _named_style_options = list(_named_styles.keys())
@@ -164,11 +165,40 @@ class FunkyFresh:
         self._cleanup_dictionary(dictionary)
         return dictionary
 
+    @staticmethod
+    def _named_style_info(named_style: str, colors: dict) -> str:
+        style_info = _named_styles[named_style]
+        figure_widths = ', '.join([f"\"{key}\" ({val} in)"
+                                  for (key, val) in
+                                  zip(style_info['figurewidths'].keys(),
+                                      style_info['figurewidths'].values())])
+        standard_colors_str = ', '.join([f"\"{key}\""
+                                         for key in standard_color_dict.keys()]
+                                        )
+        standard_colors_str = textwrap.wrap(
+            f"Standard colors: {standard_colors_str}", width=79,
+            subsequent_indent='      ')
+        standard_colors_str = '\n'.join(standard_colors_str)
+        custom_colors_str = ', '.join([f"\"{key}\"" for key in colors.keys()])
+        custom_colors_str = textwrap.wrap(
+            f"Style-specific colors: {custom_colors_str}", width=79,
+            subsequent_indent='      ')
+        custom_colors_str = '\n'.join(custom_colors_str)
+        print_str = [f"Setting {named_style} style...",
+                     f"   Font: {style_info['font']}",
+                     f"   Size: {style_info['fontsize']} pt",
+                     f"   Figure widths: {figure_widths}",
+                     f"   Default figure size: {style_info['figsize']}",
+                     f"   {standard_colors_str}",
+                     f"   {custom_colors_str}"]
+        return '\n'.join(print_str)
+
     def set_named_style(self, named_style: str, use_latex: bool = False,
                         latex_font_package: str = None,
                         latex_font_options: str = None,
                         additional_latex_packages: str = None,
-                        additional_rcparams: dict = None):
+                        additional_rcparams: dict = None,
+                        print_info: bool = True):
         """
         Set the Matplotlib runtime configuration to match a named journal
         style.
@@ -198,6 +228,9 @@ class FunkyFresh:
             style defaults). For example, {'font.size': 24} will override the
             font size defined in one of the FunkyFresh named styles and set it
             to 24 pt.
+        print_info : bool
+            Whether or not to print out helpful information about the style
+            when you set it.
 
         Returns
         -------
@@ -207,31 +240,32 @@ class FunkyFresh:
         --------
         Set AAS journals style and get the width of a column-width figure:
         >>> ffs = FunkyFresh()
-        >>> ffs.set_named_style('AAS')
+        >>> ffs.set_named_style('AAS', print_info=False)
         >>> ffs.figure_widths['column']
         3.5
 
         Set AGU journals style and get the custom blue color:
         >>> ffs = FunkyFresh()
-        >>> ffs.set_named_style('AGU')
+        >>> ffs.set_named_style('AGU', print_info=False)
         >>> ffs.colors['agu_blue']
         '#004174'
 
         Set A&A journal style and get the (garish) custom blue color:
         >>> ffs = FunkyFresh()
-        >>> ffs.set_named_style('A&A')
+        >>> ffs.set_named_style('A&A', print_info=False)
         >>> ffs.colors['aa_blue']
         '#0000FF'
 
         Set Caltech Thesis style and get the Caltech orange color:
         >>> ffs = FunkyFresh()
-        >>> ffs.set_named_style('Caltech Thesis')
+        >>> ffs.set_named_style('Caltech Thesis', print_info=False)
         >>> ffs.colors['caltech_orange']
         '#FF6C0C'
 
-        Set Monthly Notices of the Royal Astronomical Socity style and get the lavender color:
+        Set Monthly Notices of the Royal Astronomical Socity style and get the
+        lavender color:
         >>> ffs = FunkyFresh()
-        >>> ffs.set_named_style('MNRAS')
+        >>> ffs.set_named_style('MNRAS', print_info=False)
         >>> ffs.colors['mnras_lavender']
         '#AEA6CE'
         """
@@ -246,6 +280,10 @@ class FunkyFresh:
         if 'colors' in style_params.keys():
             for color_set in style_params['colors']:
                 self._colors = {**self._colors, **color_set}
+        color_set = {key: self._colors[key]
+                     for key in self._colors if key not in standard_color_dict}
+        if print_info:
+            print(self._named_style_info(named_style, color_set))
 
     def named_style_context(self, named_style: str, use_latex: bool = False,
                             latex_font_package: str = None,

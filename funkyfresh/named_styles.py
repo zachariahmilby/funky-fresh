@@ -14,7 +14,7 @@ _aas = {
     'figsize': (3.5, 2.163),
     'latex_font_package': 'stix',
     'latex_preamble': r'\usepackage{siunitx, amsmath, amssymb, '
-                      r'isomath, physics}\usepackage[version = 4]{mhchem}',
+                      r'isomath, physics}\usepackage[version=4]{mhchem}',
     'figurewidths': {'column': 3.5, 'page': 7.3},
 }
 
@@ -31,7 +31,7 @@ _agu = {
     'figsize': (5.6, 3.461),
     'latex_font_package': 'stix',
     'latex_preamble': r'\usepackage{siunitx, amsmath, amssymb, '
-                      r'isomath, physics}\usepackage[version = 4]{mhchem}',
+                      r'isomath, physics}\usepackage[version=4]{mhchem}',
     'figurewidths': {'column': 3.5, 'text': 5.6,
                      'page': 7.5},
     'colors': [{'agu_blue': '#004174'}],
@@ -51,7 +51,7 @@ _aa = {
     'figsize': (3.543, 2.19),
     'latex_font_package': 'stix',
     'latex_preamble': r'\usepackage{siunitx, amsmath, amssymb, '
-                      r'isomath, physics}\usepackage[version = 4]{mhchem}',
+                      r'isomath, physics}\usepackage[version=4]{mhchem}',
     'figurewidths': {'column': 3.543, 'page': 7.283},
     'colors': [{'aa_blue': '#0000FF'}],
 }
@@ -70,7 +70,7 @@ _mnras = {
     'figsize': (3.4, 2.10),
     'latex_font_package': 'stix',
     'latex_preamble': r'\usepackage{siunitx, amsmath, amssymb, '
-                      r'isomath, physics}\usepackage[version = 4]{mhchem}',
+                      r'isomath, physics}\usepackage[version=4]{mhchem}',
     'figurewidths': {'column': 3.4, 'page': 7.05},
     'colors': [{'mnras_lavender': '#AEA6CE'}],
 }
@@ -90,7 +90,7 @@ _caltech_thesis = {
     'figsize': (5.5206, 3.4119),
     'latex_font_package': 'stix',
     'latex_preamble': r'\usepackage{siunitx, amsmath, amssymb, '
-                      r'isomath, physics}\usepackage[version = 4]{mhchem}',
+                      r'isomath, physics}\usepackage[version=4]{mhchem}',
     'figurewidths': {'text': 5.5206},
     'colors': [caltech_orange, caltech_neutral_colors,
                caltech_bright_colors, caltech_deep_colors]

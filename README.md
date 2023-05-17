@@ -15,6 +15,7 @@ compared to the Matplotlib defaults).
   - Astrophysical Journal (ApJ)
   - Planetary Science Journal (PSJ)
 - Astronomy & Astrophysics (A&A)
+- Monthly Notices of the Royal Astronomical Society (MNRAS)
 - Caltech Thesis/Dissertation:
   - Includes colors from the Caltech Identity Toolkit (https://identity.caltech.edu)
 
@@ -54,7 +55,7 @@ know all of the currently-available styles, you can access them get them
 through the method `get_available_styles()`:
 ```
 >>> ffs.get_available_styles()
-['AAS', 'AGU', 'Caltech Thesis']
+['AAS', 'AGU', 'A&A', 'MNRAS', 'Caltech Thesis']
 ```
 
 Another option is just to set a custom style from a dictionary of runtime 
