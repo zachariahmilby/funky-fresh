@@ -228,6 +228,12 @@ class FunkyFresh:
         >>> ffs.set_named_style('Caltech Thesis')
         >>> ffs.colors['caltech_orange']
         '#FF6C0C'
+
+        Set Monthly Notices of the Royal Astronomical Socity style and get the lavender color:
+        >>> ffs = FunkyFresh()
+        >>> ffs.set_named_style('MNRAS')
+        >>> ffs.colors['mnras_lavender']
+        '#AEA6CE'
         """
         style, style_params = self._get_named_style(
             named_style=named_style, use_latex=use_latex,
@@ -352,7 +358,7 @@ class FunkyFresh:
         Get the column-width in inches:
         >>> ffs = FunkyFresh()
         >>> ffs.get_available_styles()
-        ['AAS', 'AGU', 'A&A', 'Caltech Thesis']
+        ['AAS', 'AGU', 'A&A', 'MNRAS', 'Caltech Thesis']
         """
         return _named_style_options
 

@@ -11,7 +11,7 @@ _aas = {
     'mathtext.fontset': 'stix',
     'fontsize': 9,
     'linewidths': 0.397,
-    'figsize': (7.3, 4.51165),
+    'figsize': (3.5, 2.163),
     'latex_font_package': 'stix',
     'latex_preamble': r'\usepackage{siunitx, amsmath, amssymb, '
                       r'isomath, physics}\usepackage[version = 4]{mhchem}',
@@ -28,7 +28,7 @@ _agu = {
     'mathtext.fontset': 'stix',
     'fontsize': 8,
     'linewidths': 0.5,
-    'figsize': (7.5, 4.63525),
+    'figsize': (5.6, 3.461),
     'latex_font_package': 'stix',
     'latex_preamble': r'\usepackage{siunitx, amsmath, amssymb, '
                       r'isomath, physics}\usepackage[version = 4]{mhchem}',
@@ -48,12 +48,31 @@ _aa = {
     'mathtext.fontset': 'stix',
     'fontsize': 9,
     'linewidths': 0.5,
-    'figsize': (7.283, 4.501),
+    'figsize': (3.543, 2.19),
     'latex_font_package': 'stix',
     'latex_preamble': r'\usepackage{siunitx, amsmath, amssymb, '
                       r'isomath, physics}\usepackage[version = 4]{mhchem}',
     'figurewidths': {'column': 3.543, 'page': 7.283},
     'colors': [{'aa_blue': '#0000FF'}],
+}
+
+
+# ================================================= #
+# Monthly Notices of the Royal Astronomical Society #
+# ================================================= #
+
+_mnras = {
+    'fontfamily': 'serif',
+    'font': 'Times New Roman',
+    'mathtext.fontset': 'stix',
+    'fontsize': 8,
+    'linewidths': 0.5,
+    'figsize': (3.4, 2.10),
+    'latex_font_package': 'stix',
+    'latex_preamble': r'\usepackage{siunitx, amsmath, amssymb, '
+                      r'isomath, physics}\usepackage[version = 4]{mhchem}',
+    'figurewidths': {'column': 3.4, 'page': 7.05},
+    'colors': [{'mnras_lavender': '#AEA6CE'}],
 }
 
 
@@ -82,5 +101,6 @@ _named_styles = {
     'AAS': _aas,
     'AGU': _agu,
     'A&A': _aa,
+    'MNRAS': _mnras,
     'Caltech Thesis': _caltech_thesis,
 }
