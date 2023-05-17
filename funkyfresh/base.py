@@ -180,17 +180,22 @@ class FunkyFresh:
             subsequent_indent='      ')
         standard_colors_str = '\n'.join(standard_colors_str)
         custom_colors_str = ', '.join([f"\"{key}\"" for key in colors.keys()])
-        custom_colors_str = textwrap.wrap(
-            f"Style-specific colors: {custom_colors_str}", width=79,
-            subsequent_indent='      ')
-        custom_colors_str = '\n'.join(custom_colors_str)
+        if len(custom_colors_str) != 0:
+            has_custom_colors = True
+            custom_colors_str = textwrap.wrap(
+                f"Style-specific colors: {custom_colors_str}", width=79,
+                subsequent_indent='      ')
+            custom_colors_str = '\n'.join(custom_colors_str)
+        else:
+            has_custom_colors = False
         print_str = [f"Setting {named_style} style...",
                      f"   Font: {style_info['font']}",
                      f"   Size: {style_info['fontsize']} pt",
                      f"   Figure widths: {figure_widths}",
                      f"   Default figure size: {style_info['figsize']}",
-                     f"   {standard_colors_str}",
-                     f"   {custom_colors_str}"]
+                     f"   {standard_colors_str}"]
+        if has_custom_colors:
+            print_str.append(f"   {custom_colors_str}")
         return '\n'.join(print_str)
 
     def set_named_style(self, named_style: str, use_latex: bool = False,
