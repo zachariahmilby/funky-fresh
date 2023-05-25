@@ -102,7 +102,7 @@ _whitepaper = {
     'name': 'Personal Whitepaper',
     'fontfamily': 'serif',
     'font': 'STIX 2',
-    'fontsize': 10,
+    'fontsize': 8,
     'linewidths': 0.4,
     'figsize': (3.1875, 1.97),
     'latex_font_package': 'stix2',
