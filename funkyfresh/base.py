@@ -465,7 +465,7 @@ class FunkyFresh:
         Get the column-width in inches:
         >>> ffs = FunkyFresh()
         >>> ffs.get_available_styles()
-        ['AAS', 'AGU', 'A&A', 'MNRAS', 'Caltech Thesis']
+        ['AAS', 'AGU', 'A&A', 'MNRAS', 'Caltech Thesis', 'Whitepaper']
         """
         return _named_style_options
 

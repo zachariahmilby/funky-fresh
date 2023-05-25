@@ -16,8 +16,9 @@ compared to the Matplotlib defaults).
   - Planetary Science Journal (PSJ)
 - Astronomy & Astrophysics (A&A)
 - Monthly Notices of the Royal Astronomical Society (MNRAS)
-- Caltech Thesis/Dissertation:
-  - Includes colors from the Caltech Identity Toolkit (https://identity.caltech.edu)
+- Caltech Thesis/Dissertation (includes colors from the Caltech Identity 
+  Toolkit available at https://identity.caltech.edu)
+- My personal whitepaper style (based on the LaTeX article default class)
 
 ## Installation
 Here are some installation instructions for the average Anaconda user, if 
