@@ -1,7 +1,14 @@
-import matplotlib
-from funkyfresh.named_styles import _named_styles
-from funkyfresh.colors import standard_color_dict
 import textwrap
+from pathlib import Path
+
+import matplotlib
+from matplotlib.backends.backend_pgf import FigureCanvasPgf
+
+from funkyfresh.colors import standard_color_dict
+from funkyfresh.named_styles import _named_styles
+
+# get package directory
+_package_directory = Path(__file__).resolve().parent
 
 # get named style options
 _named_style_options = list(_named_styles.keys())
@@ -14,8 +21,37 @@ universal_properties = {
     'legend.framealpha': 1,
     'savefig.dpi': 600,
     'figure.dpi': 150,
+    'figure.constrained_layout.use': True,
     'pdf.fonttype': 42,
     'ps.fonttype': 42,
+}
+
+# # add all fonts to working directory
+font_path = Path(_package_directory, 'anc', 'fonts')
+
+# settings for sans-serif presentation mode
+packages = [
+    fr'\setmainfont{{FiraSans}}[Path = {font_path}/, Extension = .otf, '
+    r'UprightFont = *-Regular, BoldFont = *-Bold, ItalicFont = *-Italic,'
+    r'BoldItalicFont = *-BoldItalic]',
+    fr'\setsansfont{{FiraSans}}[Path = {font_path}/, Extension = .otf, '
+    r'UprightFont = *-Regular, BoldFont = *-Bold, ItalicFont = *-Italic, '
+    r'BoldItalicFont = *-BoldItalic]',
+    fr'\setmonofont{{FiraMono}}[Path = {font_path}/, Extension = .otf, '
+    r'UprightFont = *-Regular, BoldFont = *-Bold, ItalicFont = *-Oblique,'
+    r'BoldItalicFont = *-BoldOblique]',
+    r'\renewcommand\familydefault{\sfdefault}',
+    r'\usepackage[mathrm=sym]{unicode-math}',
+    r'\setmathfont{Fira Math}'
+    r'\usepackage{siunitx}',
+    r'\usepackage{amsmath}',
+    r'\usepackage{physics}',
+    r'\usepackage[version=4]{mhchem}',
+]
+presentation_settings = {
+    'additional_latex_packages': ''.join(packages),
+    'latex_font_package': 'fontspec',
+    'additional_rc_params': {}
 }
 
 # get the list of default rcParams for the particular version of Matplotlib
@@ -51,23 +87,35 @@ class FunkyFresh:
         from matplotlib_inline.backend_inline import set_matplotlib_formats
         set_matplotlib_formats('retina')
 
-    def _get_named_style(self, named_style: str, use_latex: bool,
-                         latex_font_package: str,
+    def _get_named_style(self, named_style: str, latex_font_package: str,
                          latex_font_options: str,
                          additional_latex_packages: str or [str],
-                         additional_rcparams: dict):
+                         additional_rcparams: dict, presentation_style: bool):
         if named_style not in _named_style_options:
             raise NamedStyleException(
                 f"Named style not found. Available options are: "
                 f"{', '.join(_named_style_options)}.")
         else:
             named_style: dict = _named_styles[named_style]
-            style = self._make_named_style_dictionary(
-                named_style=named_style, use_latex=use_latex,
-                latex_font_package=latex_font_package,
-                latex_font_options=latex_font_options,
-                additional_latex_packages=additional_latex_packages,
-                additional_rcparams=additional_rcparams)
+            if not presentation_style:
+                style = self._make_named_style_dictionary(
+                    named_style=named_style,
+                    latex_font_package=latex_font_package,
+                    latex_font_options=latex_font_options,
+                    additional_latex_packages=additional_latex_packages,
+                    additional_rcparams=additional_rcparams,
+                    presentation_style=presentation_style)
+            else:
+                style = self._make_named_style_dictionary(
+                    named_style=named_style,
+                    latex_font_package=presentation_settings[
+                        'latex_font_package'],
+                    latex_font_options=None,
+                    additional_latex_packages=presentation_settings[
+                        'additional_latex_packages'],
+                    additional_rcparams=presentation_settings[
+                        'additional_rc_params'],
+                    presentation_style=presentation_style)
             return style, named_style
 
     @staticmethod
@@ -116,19 +164,33 @@ class FunkyFresh:
     def _make_latex_dictionary(
             preamble: str, font_package: str or None,
             font_options: str or None,
-            additional_latex_packages: str or None):
+            additional_latex_packages: str or None,
+            presentation_style: bool):
+        combined_preamble = ''
         if font_package is not None:
             if font_options is not None:
-                preamble = fr'\usepackage[{font_options}]{{{font_package}}}' \
-                           fr'{preamble}'
+                combined_preamble += fr'\usepackage[{font_options}]\
+                {{{font_package}}}'
             else:
-                preamble = fr'\usepackage{{{font_package}}}{preamble}'
-        if additional_latex_packages is not None:
-            preamble += additional_latex_packages
-        return {
-            'text.usetex': True,
-            'text.latex.preamble': preamble,
-        }
+                combined_preamble += fr'\usepackage{{{font_package}}}'
+        if not presentation_style:
+            combined_preamble += preamble
+            if additional_latex_packages is not None:
+                combined_preamble += additional_latex_packages
+        else:
+            combined_preamble += additional_latex_packages
+        if presentation_style:
+            matplotlib.backend_bases.register_backend('pdf', FigureCanvasPgf)
+            return {
+                'text.usetex': True,
+                'pgf.preamble': combined_preamble,
+                'pgf.rcfonts': False,
+            }
+        else:
+            return {
+                'text.usetex': True,
+                'text.latex.preamble': combined_preamble,
+            }
 
     @staticmethod
     def _cleanup_dictionary(dictionary: dict):
@@ -138,36 +200,38 @@ class FunkyFresh:
             del dictionary[key]
 
     def _make_named_style_dictionary(self, named_style: dict,
-                                     use_latex: bool,
-                                     latex_font_package: str,
-                                     latex_font_options: str,
-                                     additional_latex_packages: str,
-                                     additional_rcparams: dict):
+                                     latex_font_package: str or None,
+                                     latex_font_options: str or None,
+                                     additional_latex_packages: str or None,
+                                     additional_rcparams: dict or None,
+                                     presentation_style: bool):
+        dictionary = {'figure.figsize': named_style['figsize']}
         font_dictionary = self._make_font_dictionary(
-            family=named_style['fontfamily'], fontsize=named_style['fontsize'])
+            family=named_style['fontfamily'],
+            fontsize=named_style['fontsize'])
         linewidth_dictionary = self._make_linewidth_dictionary(
             linewidth=named_style['linewidths'])
-        dictionary = {**universal_properties, **font_dictionary,
+        dictionary = {**dictionary, **universal_properties, **font_dictionary,
                       **linewidth_dictionary}
-        if use_latex:
-            if latex_font_package is not None:
-                font_package = latex_font_package
-            else:
-                font_package = named_style['latex_font_package']
-            latex_dictionary = self._make_latex_dictionary(
-                preamble=named_style['latex_preamble'],
-                font_package=font_package,
-                font_options=latex_font_options,
-                additional_latex_packages=additional_latex_packages)
-            dictionary = {**dictionary, **latex_dictionary}
+        if latex_font_package is not None:
+            font_package = latex_font_package
+        else:
+            font_package = named_style['latex_font_package']
+        latex_dictionary = self._make_latex_dictionary(
+            preamble=named_style['latex_preamble'],
+            font_package=font_package,
+            font_options=latex_font_options,
+            additional_latex_packages=additional_latex_packages,
+            presentation_style=presentation_style)
+        dictionary = {**dictionary, **latex_dictionary}
         if additional_rcparams is not None:
             dictionary = {**dictionary, **additional_rcparams}
         self._cleanup_dictionary(dictionary)
         return dictionary
 
     @staticmethod
-    def _named_style_info(named_style: str, colors: dict) -> str:
-        style_info = _named_styles[named_style]
+    def _named_style_info(style_info: dict, colors: dict,
+                          presentation_style: bool) -> str:
         figure_widths = ', '.join([f"\"{key}\" ({val} in)"
                                   for (key, val) in
                                   zip(style_info['figurewidths'].keys(),
@@ -188,8 +252,14 @@ class FunkyFresh:
             custom_colors_str = '\n'.join(custom_colors_str)
         else:
             has_custom_colors = False
-        print_str = [f"Setting {named_style} style...",
-                     f"   Font: {style_info['font']}",
+        if presentation_style:
+            font = 'Fira Sans'
+            indicator = '(presentation) '
+        else:
+            font = style_info['font']
+            indicator = ''
+        print_str = [f"Setting {style_info['name']} {indicator}style...",
+                     f"   Font: {font}",
                      f"   Size: {style_info['fontsize']} pt",
                      f"   Figure widths: {figure_widths}",
                      f"   Default figure size: {style_info['figsize']}",
@@ -198,12 +268,13 @@ class FunkyFresh:
             print_str.append(f"   {custom_colors_str}")
         return '\n'.join(print_str)
 
-    def set_named_style(self, named_style: str, use_latex: bool = False,
+    def set_named_style(self, named_style: str,
                         latex_font_package: str = None,
                         latex_font_options: str = None,
                         additional_latex_packages: str = None,
                         additional_rcparams: dict = None,
-                        print_info: bool = True):
+                        print_info: bool = True,
+                        presentation_style: bool = False):
         """
         Set the Matplotlib runtime configuration to match a named journal
         style.
@@ -213,9 +284,6 @@ class FunkyFresh:
         named_style : str
             The pre-defined style you want to use. For a list of available
             styles, use the method `get_available_styles()`.
-        use_latex : bool
-            Set to True if you want to use LaTeX to render text in your plots.
-            Requires a local LaTeX installation.
         latex_font_package : str
             If you want to set a LaTeX font package other than the default
             Computer Modern, give the package name here. For example, 'stix'
@@ -236,6 +304,9 @@ class FunkyFresh:
         print_info : bool
             Whether or not to print out helpful information about the style
             when you set it.
+        presentation_style : bool
+            If set to true, changes fonts to Helvetica. This will work with
+            LaTeX math mode.
 
         Returns
         -------
@@ -275,11 +346,12 @@ class FunkyFresh:
         '#AEA6CE'
         """
         style, style_params = self._get_named_style(
-            named_style=named_style, use_latex=use_latex,
+            named_style=named_style,
             latex_font_package=latex_font_package,
             latex_font_options=latex_font_options,
             additional_latex_packages=additional_latex_packages,
-            additional_rcparams=additional_rcparams)
+            additional_rcparams=additional_rcparams,
+            presentation_style=presentation_style)
         self._set_rcparams(style)
         self._figure_widths = style_params['figurewidths']
         if 'colors' in style_params.keys():
@@ -288,13 +360,16 @@ class FunkyFresh:
         color_set = {key: self._colors[key]
                      for key in self._colors if key not in standard_color_dict}
         if print_info:
-            print(self._named_style_info(named_style, color_set))
+            print(self._named_style_info(
+                style_params, color_set, presentation_style=presentation_style)
+            )
 
-    def named_style_context(self, named_style: str, use_latex: bool = False,
+    def named_style_context(self, named_style: str,
                             latex_font_package: str = None,
                             latex_font_options: str = None,
                             additional_latex_packages: str = None,
-                            additional_rcparams: dict = None):
+                            additional_rcparams: dict = None,
+                            presentation_style: bool = False):
         """
         Temporarily set the Matplotlib runtime configuration to match a named
         journal style using the context manager.
@@ -304,9 +379,6 @@ class FunkyFresh:
         named_style : str
             The pre-defined style you want to use. For a list of available
             styles, use the method `get_available_styles()`.
-        use_latex : bool
-            Set to True if you want to use LaTeX to render text in your plots.
-            Requires a local LaTeX installation.
         latex_font_package : str
             If you want to set a LaTeX font package other than the default
             Computer Modern, give the package name here. For example, 'stix'
@@ -324,21 +396,25 @@ class FunkyFresh:
             style defaults). For example, {'font.size': 24} will override the
             font size defined in one of the FunkyFresh named styles and set it
             to 24 pt.
+        presentation_style : bool
+            If set to true, changes fonts to Helvetica. This will work with
+            LaTeX math mode.
 
         Returns
         -------
         None.
         """
         style, style_params = self._get_named_style(
-            named_style=named_style, use_latex=use_latex,
+            named_style=named_style,
             latex_font_package=latex_font_package,
             latex_font_options=latex_font_options,
             additional_latex_packages=additional_latex_packages,
-            additional_rcparams=additional_rcparams)
+            additional_rcparams=additional_rcparams,
+            presentation_style=presentation_style)
         return matplotlib.rc_context(rc=style)
 
-    def set_custom_style(self, rcparams: dict = None, use_latex: bool = False,
-                         latex_preamble: str = None):
+    def set_custom_style(self, rcparams: dict = None,
+                         latex_preamble: str = ''):
         """
         A convenience function for arbitrarily modifying the runtime
         configuration.
@@ -347,9 +423,6 @@ class FunkyFresh:
         ----------
         rcparams : str
             Any runtime configuration parameters you want to change.
-        use_latex : bool
-            Set to True if you want to use LaTeX to render text in your plots.
-            Requires a local LaTeX installation.
         latex_preamble : str
             Any LaTeX packages you want loaded. You must explicitly pass
             this as a string with escaped backslashes like
@@ -368,22 +441,13 @@ class FunkyFresh:
         >>> ffs.set_custom_style(rcparams=params)
         >>> matplotlib.rcParams['font.size']
         24.0
-
-        Use LaTeX rendering and load the STIX2 font with upright integrals:
-        >>> import matplotlib
-        >>> ffs = FunkyFresh()
-        >>> preamble = r'\\usepackage[upint]{stix2}'
-        >>> ffs.set_custom_style(use_latex=True, latex_preamble=preamble)
-        >>> matplotlib.rcParams['text.latex.preamble']
-        '\\\\usepackage[upint]{stix2}'
         """
         if rcparams is None:
             rcparams = {}
-        if use_latex:
-            latex_dictionary = self._make_latex_dictionary(
-                preamble=latex_preamble, font_package=None, font_options=None,
-                additional_latex_packages=None)
-            rcparams = {**rcparams, **latex_dictionary}
+        latex_dictionary = self._make_latex_dictionary(
+            preamble=latex_preamble, font_package=None, font_options=None,
+            additional_latex_packages=None, presentation_style=False)
+        rcparams = {**rcparams, **latex_dictionary}
         self._cleanup_dictionary(rcparams)
         self._set_rcparams(rcparams)
 

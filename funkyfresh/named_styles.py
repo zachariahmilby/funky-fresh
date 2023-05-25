@@ -5,7 +5,7 @@ from funkyfresh.colors import *
 # ==================================== #
 
 _aas = {
-
+    'name': 'American Astronomical Society',
     'fontfamily': 'serif',
     'font': 'Times New Roman',
     'mathtext.fontset': 'stix',
@@ -13,7 +13,7 @@ _aas = {
     'linewidths': 0.397,
     'figsize': (3.5, 2.163),
     'latex_font_package': 'stix',
-    'latex_preamble': r'\usepackage{siunitx, amsmath, amssymb, '
+    'latex_preamble': r'\usepackage{siunitx, amsmath, '
                       r'isomath, physics}\usepackage[version=4]{mhchem}',
     'figurewidths': {'column': 3.5, 'page': 7.3},
 }
@@ -23,6 +23,7 @@ _aas = {
 # ================================ #
 
 _agu = {
+    'name': 'American Geophysical Union',
     'fontfamily': 'serif',
     'font': 'Times New Roman',
     'mathtext.fontset': 'stix',
@@ -30,7 +31,7 @@ _agu = {
     'linewidths': 0.5,
     'figsize': (5.6, 3.461),
     'latex_font_package': 'stix',
-    'latex_preamble': r'\usepackage{siunitx, amsmath, amssymb, '
+    'latex_preamble': r'\usepackage{siunitx, amsmath, '
                       r'isomath, physics}\usepackage[version=4]{mhchem}',
     'figurewidths': {'column': 3.5, 'text': 5.6,
                      'page': 7.5},
@@ -43,6 +44,7 @@ _agu = {
 # ============================== #
 
 _aa = {
+    'name': 'Astronomy & Astrophysics',
     'fontfamily': 'serif',
     'font': 'Times New Roman',
     'mathtext.fontset': 'stix',
@@ -62,6 +64,7 @@ _aa = {
 # ================================================= #
 
 _mnras = {
+    'name': 'Monthly Notices of the Royal Astronomical Society',
     'fontfamily': 'serif',
     'font': 'Times New Roman',
     'mathtext.fontset': 'stix',
@@ -81,9 +84,9 @@ _mnras = {
 # ======================== #
 
 _caltech_thesis = {
-
+    'name': 'Caltech Thesis',
     'fontfamily': 'serif',
-    'font': 'Times',
+    'font': 'Times New Roman',
     'mathtext.fontset': 'stix',
     'fontsize': 10,
     'linewidths': 0.4,
