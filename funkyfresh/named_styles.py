@@ -104,10 +104,11 @@ _whitepaper = {
     'font': 'STIX 2',
     'fontsize': 8,
     'linewidths': 0.4,
-    'figsize': (3.1875, 1.97),
+    'figsize': (4.792, 2.961),
     'latex_font_package': 'stix2',
     'latex_preamble': _default_latex_preamble,
-    'figurewidths': {'column': 3.1875, 'page': 6.514},
+    'figurewidths': {'twocolumn_single': 3.1875, 'twocolumn_double': 6.514,
+                     'onecolumn': 4.792},
 }
 
 
