@@ -26,7 +26,7 @@ universal_properties = {
     'ps.fonttype': 42,
 }
 
-# # add all fonts to working directory
+# add all fonts to working directory
 font_path = Path(_package_directory, 'anc', 'fonts')
 
 # settings for sans-serif presentation mode
@@ -79,6 +79,7 @@ class FunkyFresh:
         """
         self._colors = standard_color_dict
         self._figure_widths = None
+        self._linewidth = None
         if highres_inline_plots:
             self._set_highres_inline()
 
@@ -261,6 +262,7 @@ class FunkyFresh:
         print_str = [f"Setting {style_info['name']} {indicator}style...",
                      f"   Font: {font}",
                      f"   Size: {style_info['fontsize']} pt",
+                     f"   Line width: {style_info['linewidths']}",
                      f"   Figure widths: {figure_widths}",
                      f"   Default figure size: {style_info['figsize']}",
                      f"   {standard_colors_str}"]
@@ -320,6 +322,12 @@ class FunkyFresh:
         >>> ffs.figure_widths['column']
         3.5
 
+        Set AAS journals style and get the default linewidth:
+        >>> ffs = FunkyFresh()
+        >>> ffs.set_named_style('AAS', print_info=False)
+        >>> ffs.linewidth
+        0.397
+
         Set AGU journals style and get the custom blue color:
         >>> ffs = FunkyFresh()
         >>> ffs.set_named_style('AGU', print_info=False)
@@ -354,6 +362,7 @@ class FunkyFresh:
             presentation_style=presentation_style)
         self._set_rcparams(style)
         self._figure_widths = style_params['figurewidths']
+        self._linewidth = style_params['linewidths']
         if 'colors' in style_params.keys():
             for color_set in style_params['colors']:
                 self._colors = {**self._colors, **color_set}
@@ -481,3 +490,7 @@ class FunkyFresh:
     @property
     def figure_widths(self) -> dict:
         return self._figure_widths
+
+    @property
+    def linewidth(self) -> float:
+        return self._linewidth
