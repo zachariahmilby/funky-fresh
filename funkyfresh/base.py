@@ -16,6 +16,7 @@ _named_style_options = list(_named_styles.keys())
 # these are universal properties I want to apply to every style
 universal_properties = {
     'axes.prop_cycle': matplotlib.cycler('color', ['k']),
+    'image.cmap': 'inferno',
     'legend.fancybox': False,
     'legend.edgecolor': 'k',
     'legend.framealpha': 1,
