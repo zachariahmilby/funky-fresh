@@ -28,7 +28,7 @@ universal_properties = {
 }
 
 # add all fonts to working directory
-font_path = Path(_package_directory, 'anc', 'fonts')
+font_path = str(Path(_package_directory, 'anc', 'fonts'))
 
 # settings for sans-serif presentation mode
 packages = [
@@ -43,7 +43,9 @@ packages = [
     r'BoldItalicFont = *-BoldOblique]',
     r'\renewcommand\familydefault{\sfdefault}',
     r'\usepackage[mathrm=sym]{unicode-math}',
-    r'\setmathfont{Fira Math}'
+    fr'\setmathfont{{FiraMath}}[Path = {font_path}/, Extension = .otf, '
+    r'UprightFont = *-Regular, BoldFont = *-Bold, ItalicFont = *-Oblique,'
+    r'BoldItalicFont = *-BoldOblique]',
     r'\usepackage{siunitx}',
     r'\usepackage{amsmath}',
     r'\usepackage{physics}',
@@ -353,6 +355,12 @@ class FunkyFresh:
         >>> ffs.set_named_style('MNRAS', print_info=False)
         >>> ffs.colors['mnras_lavender']
         '#AEA6CE'
+
+        Set Elsevier (Icarus) style and get the width of a full-page figure:
+        >>> ffs = FunkyFresh()
+        >>> ffs.set_named_style('Elsevier', print_info=False)
+        >>> ffs.figure_widths['page']
+        7.2295
         """
         style, style_params = self._get_named_style(
             named_style=named_style,
@@ -475,7 +483,7 @@ class FunkyFresh:
         Get the column-width in inches:
         >>> ffs = FunkyFresh()
         >>> ffs.get_available_styles()
-        ['AAS', 'AGU', 'A&A', 'MNRAS', 'Caltech Thesis', 'Whitepaper']
+        ['AAS', 'AGU', 'Elsevier', 'A&A', 'MNRAS', 'Caltech Thesis', 'Whitepaper']
         """
         return _named_style_options
 
