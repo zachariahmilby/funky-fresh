@@ -4,8 +4,13 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib
 
 from funkyfresh.miscellaneous import _package_directory
+
+
+# store default backend name
+default_backend = matplotlib.get_backend()
 
 
 class _Style:
@@ -18,8 +23,6 @@ class _Style:
                  linewidth: int or float,
                  figure_widths: dict[str: float or int],
                  default_figure_size: tuple[float or int, float or int],
-                 font_package: str,
-                 font_package_options: str = '',
                  custom_colors: list[str] = None):
         """
         Class to hold style parameters and provide methods to create and use
@@ -42,10 +45,6 @@ class _Style:
         default_figure_size : tuple[float or int, float or int]
             The default figure size. Probably the smallest of the figure sizes
             with a horizontal/vertical ratio of 1.618 (the golden ratio).
-        font_package : str
-            The name of the font package to use with LaTeX.
-        font_package_options : str
-            Any options to pass to LaTeX when using the font package.
         custom_colors : list[str]
             Any custom colors appropriate to the style. For instance, AGU has
             a particular blue they use all over their journal articles, Caltech
@@ -58,8 +57,6 @@ class _Style:
         self._linewidth = linewidth
         self._figure_widths = figure_widths
         self._default_figure_size = default_figure_size
-        self._font_package = font_package
-        self._font_package_options = font_package_options
         self._custom_colors = custom_colors
 
     def __str__(self):
@@ -75,6 +72,19 @@ class _Style:
             print_str += '\n'
             print_str += f'   Custom color: {", ".join(self._custom_colors)}'
         return print_str
+
+    def _get_preamble(self,
+                      presentation: bool) -> str:
+        path = Path(_package_directory, 'anc', 'latex_preambles')
+        common_preamble = Path(path, 'common_preamble.tex')
+        preamble = open(common_preamble, 'r').read()
+        if presentation:
+            font_preamble = Path(path, 'helvetica_preamble.tex')
+        else:
+            filename = f'{self._font.replace(" ", "").lower()}_preamble.tex'
+            font_preamble = Path(path, filename)
+        preamble += open(font_preamble, 'r').read()
+        return preamble.replace('\n', '')
 
     def _make_replacements_dictionary(self,
                                       presentation: bool) -> dict[str, str]:
@@ -93,28 +103,22 @@ class _Style:
             The dictionary containing keys (to be replaced) and values (their
             replacements).
         """
-        if presentation:
-            fontpackage = (r'\usepackage{fontspec}'
-                           r'\setmainfont{Fira Sans}[Scale=0.93]'
-                           r'\setsansfont{Fira Sans}[Scale=0.93]'
-                           r'\usepackage{unicode-math}'
-                           r'\setmathfont{Fira Math}[Scale=0.93]')
-            plt.switch_backend('pgf')
-        else:
-            fontpackage = (
-                rf'\usepackage[{{{self._font_package_options}}}]'
-                rf'{{{self._font_package}}}')
+        replacements = {}
+
         figsize = ', '.join(np.array(self._default_figure_size).astype(str))
-        replacements = {
-            '[linewidth]': f'{self._linewidth}',
-            '[2*linewidth]': f'{2*self._linewidth}',
-            '[fontsize]': f'{self._fontsize}',
-            '[figsize]': figsize,
-            '[fontpackage]': fontpackage,
-        }
+        replacements['[linewidth]'] = f'{self._linewidth}'
+        replacements['[2*linewidth]'] = f'{2*self._linewidth}'
+        replacements['[fontsize]'] = f'{self._fontsize}'
+        replacements['[figsize]'] = figsize
+        replacements['[preamble]'] = self._get_preamble(presentation)
+        if presentation:
+            replacements['[fontfamily]'] = 'sans-serif'
+        else:
+            replacements['[fontfamily]'] = 'serif'
         return replacements
 
-    def _make_stylesheet(self, presentation: bool) -> Path:
+    def _make_stylesheet(self,
+                         presentation: bool) -> Path:
         """
         This method generates a style-specific style sheet.
 
@@ -141,13 +145,16 @@ class _Style:
         return outfile
 
     def set_style(self,
-                  silent: bool = False,
-                  presentation: bool = False) -> None:
+                  fontsize: int | float = None,
+                  presentation: bool = False,
+                  silent: bool = False) -> None:
         """
         This method sets the Matplotlib rcParams.
 
         Parameters
         ----------
+        fontsize : int or float, optional
+            Set the fontsize if you want to override the default.
         silent : bool
             Whether or not to print out information about the style and its
             parameters.
@@ -157,7 +164,10 @@ class _Style:
         Returns
         -------
         None
+            None.
         """
+        if fontsize is not None:
+            self._fontsize = fontsize
         stylesheet = self._make_stylesheet(presentation=presentation)
         if not silent:
             print('Loading FunkyFresh style...')
@@ -179,7 +189,6 @@ styles: dict[str, _Style] = {
         linewidth=0.5,
         figure_widths={'column': 3.543, 'page': 7.283},
         default_figure_size=(3.543, 2.190),
-        font_package='stix',
         custom_colors=['aa_blue']),
     'AAS': _Style(
         key='AAS',
@@ -188,7 +197,6 @@ styles: dict[str, _Style] = {
         fontsize=8,
         linewidth=0.397,
         figure_widths={'column': 3.5, 'page': 7.3},
-        font_package='stix',
         default_figure_size=(3.5, 2.163)),
     'AGU': _Style(
         key='AGU',
@@ -198,17 +206,31 @@ styles: dict[str, _Style] = {
         linewidth=0.5,
         figure_widths={'column': 3.5, 'text': 5.6, 'page': 7.5},
         default_figure_size=(5.6, 3.461),
-        font_package='stix',
         custom_colors=['agu_blue']),
+    'Caltech Thesis': _Style(
+        key='Caltech Thesis',
+        name='Caltech Thesis',
+        font='Times New Roman',
+        fontsize=12,
+        linewidth=0.4,
+        figure_widths={'text': 6},
+        default_figure_size=(6, 3.71),
+        custom_colors=['caltech_orange']),
+    'LaTeX Default': _Style(
+        key='LaTeX Default',
+        name='LaTeX Default',
+        font='Computer Modern',
+        fontsize=10,
+        linewidth=0.4,
+        figure_widths={'text': 4.79},
+        default_figure_size=(4.79, 4.79/1.618)),
     'Elsevier': _Style(
         key='Elsevier',
         name='Elsevier (Icarus)',
-        font='Charis SIL',
+        font='Charter',
         fontsize=8,
         linewidth=0.249,
         figure_widths={'column': 3.484, 'page': 7.2295},
-        font_package='mathdesign',
-        font_package_options='bitstream-charter',
         default_figure_size=(3.484, 2.153)),
     'MNRAS': _Style(
         key='MNRAS',
@@ -218,28 +240,7 @@ styles: dict[str, _Style] = {
         linewidth=0.5,
         figure_widths={'column': 3.4, 'page': 7.05},
         default_figure_size=(3.4, 2.101),
-        font_package='stix',
         custom_colors=['mnras_lavender']),
-    'Caltech Thesis': _Style(
-        key='Caltech Thesis',
-        name='Caltech Thesis',
-        font='Times New Roman',
-        fontsize=12,
-        linewidth=0.4,
-        figure_widths={'text': 5.5},
-        default_figure_size=(5.5, 3.399),
-        font_package='stix',
-        custom_colors=['caltech_orange']),
-    'Caltech Thesis v2': _Style(
-        key='Caltech Thesis v2',
-        name='Caltech Thesis v2',
-        font='STIX Two',
-        fontsize=12,
-        linewidth=0.4,
-        figure_widths={'text': 5.5},
-        default_figure_size=(5.5, 3.399),
-        font_package='stix2',
-        custom_colors=['caltech_orange']),
     'Whitepaper': _Style(
         key='Whitepaper',
         name='Personal LaTeX Whitepaper',
@@ -249,6 +250,5 @@ styles: dict[str, _Style] = {
         figure_widths={'twocolumn_single': 3.1875,
                        'twocolumn_double': 6.514,
                        'onecolumn': 4.792},
-        font_package='stix2',
         default_figure_size=(4.792, 2.962))
 }

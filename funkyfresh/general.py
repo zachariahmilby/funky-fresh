@@ -1,28 +1,7 @@
-from pathlib import Path
-
+import matplotlib.pyplot as plt
 from matplotlib_inline.backend_inline import set_matplotlib_formats
 
-from funkyfresh.miscellaneous import _package_directory
 from funkyfresh.styles import styles
-
-
-def get_font_location() -> str:
-    """
-    Return the absolute path to the location of fonts included with your
-    installation of FunkyFresh.
-
-    Parameters
-    ----------
-    None.
-
-    Returns
-    -------
-    location : str
-        The absolute path to the location of fonts included with your
-        installation of FunkyFresh.
-    """
-    location = str(Path(_package_directory, 'anc', 'fonts'))
-    return location
 
 
 def get_available_styles() -> list[str]:
@@ -43,8 +22,9 @@ def get_available_styles() -> list[str]:
 
 
 def set_style(name: str,
-              silent: bool = False,
-              presentation: bool = False) -> None:
+              fontsize: int | float = None,
+              presentation: bool = False,
+              silent: bool = False) -> None:
     """
     Change Matplotlib runtime configuration parameters (rcParams) to match a
     journal style.
@@ -54,16 +34,22 @@ def set_style(name: str,
     name : str
         The (abbreviated) name of the style. You can get the available styles
         using `get_available_styles()`.
+    fontsize : int or float, optional
+        Set the fontsize if you want to override the default.
+    presentation : bool
+        If `True`, fonts are set to the sans-serif font 'Fira Sans'.
     silent : bool
         Whether or not to print out information about the style and its
         parameters.
-    presentation : bool
-        If `True`, fonts are set to the sans-serif font 'Fira Sans'.
 
     Returns
     -------
-    None.
+    None
+        None.
     """
     set_matplotlib_formats('retina')
+    plt.style.use('default')  # reset rcParams before applying new settings
     style = styles[name]
-    style.set_style(silent=silent, presentation=presentation)
+    style.set_style(fontsize=fontsize,
+                    presentation=presentation,
+                    silent=silent)

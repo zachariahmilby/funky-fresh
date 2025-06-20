@@ -1,2 +1,6 @@
-*.DS_Store
-*.idea
+.DS_Store
+.idea
+*.pyc
+.pytest_cache
+build
+*.egg*

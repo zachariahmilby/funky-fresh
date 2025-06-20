@@ -1,1 +1,3 @@
 include funkyfresh/anc/*
+include funkyfresh/anc/fonts/*
+include funkyfresh/anc/latex_preambles/*

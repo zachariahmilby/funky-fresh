@@ -7,16 +7,17 @@ of my institution (Caltech). If you use this, your plots will look funky and
 fresh (at least compared to the Matplotlib defaults).
 
 ## Styles Currently Supported
-- American Geophysical Union (AGU)
-  - Journal of Geophyiscal Research (JGR)
-  - Geophysical Research Letters (GRL)
+- Astronomy & Astrophysics (A&A)
 - American Astronomical Society (AAS)
   - Astrophysical Journal Letters (ApJL)
   - Astronomical Journal (AJ)
   - Astrophysical Journal (ApJ)
   - Planetary Science Journal (PSJ)
-- Astronomy & Astrophysics (A&A)
-- Icarus (Elsevier)
+- American Geophysical Union (AGU)
+  - Journal of Geophyiscal Research (JGR)
+  - Geophysical Research Letters (GRL)
+- Elsevier
+  - Icarus
 - Monthly Notices of the Royal Astronomical Society (MNRAS)
 - Caltech PhD thesis/dissertation
 - My personal whitepaper style (based on the LaTeX article default class)
@@ -34,35 +35,18 @@ instructions below I will assume that you are using a virtual environment named
 You're now ready to use the `funkyfresh` package!
 
 >**NOTE**<br>
-> This package requires a local installation of TeX Live 
-> (https://tug.org/texlive/). The fonts used (STIX, STIX Two, Charis SIL, 
-> Fira Sans) are included with the package directory under `anc/fonts`. If you 
-> have issues rendering graphics (such as in presentation mode), you might need 
-> to install the fonts on your system. As an added benefit you can use them in 
-> PowerPoint or similar software to make your presentations funky and fresh, 
-> too. If I've forgotten to install the fonts, I get an error like
-> 
-> `! Package fontspec Error: The font "Fira Sans" cannot be found.`
-> 
-> This can be easily fixed by going to the package's fonts directory and 
-> directly installing the fonts. You can get the location of the directory with
-> your installation using the `get_font_location` function. For example, on my
-> system:
-> 
-> ```
-> >>> from funkyfresh import get_font_location
-> >>> get_font_location()
-> 
-> /opt/anaconda3/envs/fftest/lib/python3.10/site-packages/funkyfresh/anc/fonts
-> ```
+> Look, you're not going to make nice looking plots without LaTeX. You're just 
+> not. So, this package requires a local installation of TeX Live 
+> (https://tug.org/texlive/), which you will have to do separately.
 
 ## Usage
-Usage is pretty simple. To get the list of available journal styles, use `get_available_styles`:
+Usage is pretty simple. To get the list of available journal styles, use 
+`get_available_styles()`:
 ```
 >>> from funkyfresh import get_available_styles
 >>> get_available_styles()
 
-['A&A', 'AAS', 'AGU', 'Elsevier', 'MNRAS', 'Caltech Thesis', 'Caltech Thesis v2', 'Whitepaper']
+['A&A', 'AAS', 'AGU', 'Elsevier', 'MNRAS', 'Caltech Thesis', 'Whitepaper']
 ```
 
 To set one of these styles, use `set_style()`. For example, to set your style to match an AGU
@@ -84,7 +68,7 @@ Loading FunkyFresh style...
    Custom color: agu_blue
 ```
 
-This will set the Matplotlib runtime parameters to match those of the AAS 
+This will set the Matplotlib runtime parameters to match those of the AGU 
 journals (appropriate line weights, Times New Roman font, etc.). It will also 
 print out some information about the style, which is useful if you want to know
 what figure sizes you should choose from, the default line width and any custom
@@ -116,7 +100,14 @@ You can then set `plt.plot(..., color=agu_blue, ...)`.
 
 ### Sans-Serif Presentation Mode
 For each style, you can also toggle `presentation=True` which will change the
-fonts to Fira Sans. See the example in the next section.
+fonts to Helvetica. See the example in the next section.
+
+>**CAUTION**<br>
+> Fonts are not necessarily comprehensive and not all symbols may be available! 
+> For Greek characters, I've established the following syntax: upright versions
+> using the addition of `up` before the name, e.g., `$\upgamma$` for an 
+> upright γ or `$\upGamma$` an upright Γ. To make these (or their standard 
+> italic versions) bold, use `\boldsymbol` before, e.g., `$\boldsymbol\Delta$`.
 
 ## Example
 Let's say for some reason I want a plot of one period of a sine wave for a 
@@ -154,7 +145,7 @@ import numpy as np
 
 from funkyfresh import set_style
 
-set_style(name='AAS', silent=True)
+set_style(name='AGU', silent=True)
 
 fig, axis = plt.subplots()
 axis.plot(theta, np.sin(theta))
@@ -166,9 +157,9 @@ plt.show()
 
 If you want to make a version of this figure in sans-serif font for a 
 PowerPoint presentation or similar, simply set the keyword `presentation=True`
-and the fonts will be replaced with Fira Sans, an excellent sans-serif font 
-with math support that feels like an appropriate sans-serif equivalent to 
-STIX Two.
+and the fonts will be replaced with Helvetuca, which seems to be the most 
+commonly used sans serif font (though it lacks significant math support, so be 
+careful!)
 
 ```
 import astropy.units as u
@@ -177,7 +168,7 @@ import numpy as np
 
 from funkyfresh import set_style
 
-set_style(name='AAS', silent=True, presentation=True)
+set_style(name='AGU', silent=True, presentation=True)
 
 fig, axis = plt.subplots()
 axis.plot(theta, np.sin(theta))
@@ -196,7 +187,7 @@ import numpy as np
 
 from funkyfresh import set_style
 
-set_style(name='AAS', silent=True)
+set_style(name='AGU', silent=True)
 plt.style.use('dark_background')
 
 fig, axis = plt.subplots()
