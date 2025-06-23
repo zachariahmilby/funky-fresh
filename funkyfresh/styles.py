@@ -19,6 +19,7 @@ class _Style:
                  key: str,
                  name: str,
                  font: str,
+                 fontpackage: str,
                  fontsize: int or float,
                  linewidth: int or float,
                  figure_widths: dict[str: float or int],
@@ -36,6 +37,8 @@ class _Style:
             The full name of the style, e.g., 'American Geophysical Union.'
         font : str
             The style's font name, e.g., 'Times New Roman'.
+        fontpackage : str
+            The LaTeX package string for the desired font.
         fontsize : float
             The style's font size.
         linewidth : float
@@ -53,6 +56,7 @@ class _Style:
         self._key = key
         self._name = name
         self._font = font
+        self._fontpackage = fontpackage
         self._fontsize = fontsize
         self._linewidth = linewidth
         self._figure_widths = figure_widths
@@ -74,6 +78,7 @@ class _Style:
         return print_str
 
     def _get_preamble(self,
+                      fontpackage: str,
                       presentation: bool) -> str:
         path = Path(_package_directory, 'anc', 'latex_preambles')
         common_preamble = Path(path, 'common_preamble.tex')
@@ -83,10 +88,12 @@ class _Style:
         else:
             filename = f'{self._font.replace(" ", "").lower()}_preamble.tex'
             font_preamble = Path(path, filename)
+        preamble += fontpackage
         preamble += open(font_preamble, 'r').read()
         return preamble.replace('\n', '')
 
     def _make_replacements_dictionary(self,
+                                      fontpackage: str,
                                       presentation: bool) -> dict[str, str]:
         """
         This method produces a dictionary of strings to be replaced in the
@@ -110,7 +117,8 @@ class _Style:
         replacements['[2*linewidth]'] = f'{2*self._linewidth}'
         replacements['[fontsize]'] = f'{self._fontsize}'
         replacements['[figsize]'] = figsize
-        replacements['[preamble]'] = self._get_preamble(presentation)
+        replacements['[preamble]'] = self._get_preamble(fontpackage,
+                                                        presentation)
         if presentation:
             replacements['[fontfamily]'] = 'sans-serif'
         else:
@@ -118,6 +126,7 @@ class _Style:
         return replacements
 
     def _make_stylesheet(self,
+                         fontpackage: str,
                          presentation: bool) -> Path:
         """
         This method generates a style-specific style sheet.
@@ -134,7 +143,8 @@ class _Style:
         """
         default_style = open(Path(_package_directory, 'anc',
                                   'template.mplstyle'), 'r').read()
-        replacements = self._make_replacements_dictionary(presentation)
+        replacements = self._make_replacements_dictionary(fontpackage,
+                                                          presentation)
         for key, val in replacements.items():
             default_style = default_style.replace(key, val)
         outfile = Path(_package_directory, 'anc', 'temporary.mplstyle')
@@ -146,15 +156,20 @@ class _Style:
 
     def set_style(self,
                   fontsize: int | float = None,
+                  fontpackage: str = None,
                   presentation: bool = False,
                   silent: bool = False) -> None:
-        """
+        r"""
         This method sets the Matplotlib rcParams.
 
         Parameters
         ----------
         fontsize : int or float, optional
             Set the fontsize if you want to override the default.
+        fontpackage : str, optional
+            Set the LaTeX font package if you want to override the default. For
+            example, to specify the STIX fonts, you would pass `
+            r'\usepackage{stix}'`.
         silent : bool
             Whether or not to print out information about the style and its
             parameters.
@@ -168,7 +183,8 @@ class _Style:
         """
         if fontsize is not None:
             self._fontsize = fontsize
-        stylesheet = self._make_stylesheet(presentation=presentation)
+        stylesheet = self._make_stylesheet(fontpackage=fontpackage,
+                                           presentation=presentation)
         if not silent:
             print('Loading FunkyFresh style...')
         with warnings.catch_warnings():
@@ -180,11 +196,14 @@ class _Style:
 
 
 """Define all the styles here."""
+
+
 styles: dict[str, _Style] = {
     'A&A': _Style(
         key='A&A',
         name='Astronomy & Astrophysics',
         font='Times New Roman',
+        fontpackage=r'\usepackage{txfonts}',
         fontsize=9,
         linewidth=0.5,
         figure_widths={'column': 3.543, 'page': 7.283},
@@ -194,6 +213,7 @@ styles: dict[str, _Style] = {
         key='AAS',
         name='American Astronomical Society',
         font='Times New Roman',
+        fontpackage=r'\usepackage{txfonts}',
         fontsize=8,
         linewidth=0.397,
         figure_widths={'column': 3.5, 'page': 7.3},
@@ -202,6 +222,7 @@ styles: dict[str, _Style] = {
         key='AGU',
         name='American Geophysical Union',
         font='Times New Roman',
+        fontpackage=r'\usepackage{txfonts}',
         fontsize=8,
         linewidth=0.5,
         figure_widths={'column': 3.5, 'text': 5.6, 'page': 7.5},
@@ -211,6 +232,7 @@ styles: dict[str, _Style] = {
         key='Caltech Thesis',
         name='Caltech Thesis',
         font='Times New Roman',
+        fontpackage=r'\usepackage{txfonts}',
         fontsize=12,
         linewidth=0.4,
         figure_widths={'text': 6},
@@ -220,6 +242,7 @@ styles: dict[str, _Style] = {
         key='LaTeX Default',
         name='LaTeX Default',
         font='Computer Modern',
+        fontpackage=r'\usepackage{lmodern}',
         fontsize=10,
         linewidth=0.4,
         figure_widths={'text': 4.79},
@@ -228,6 +251,7 @@ styles: dict[str, _Style] = {
         key='Elsevier',
         name='Elsevier (Icarus)',
         font='Charter',
+        fontpackage=r'\usepackage[bitstream-charter]{mathdesign}',
         fontsize=8,
         linewidth=0.249,
         figure_widths={'column': 3.484, 'page': 7.2295},
@@ -236,6 +260,7 @@ styles: dict[str, _Style] = {
         key='MNRAS',
         name='Monthly Notices of the Royal Astronomical Society',
         font='Times New Roman',
+        fontpackage=r'\usepackage{txfonts}',
         fontsize=8,
         linewidth=0.5,
         figure_widths={'column': 3.4, 'page': 7.05},
@@ -245,6 +270,7 @@ styles: dict[str, _Style] = {
         key='Whitepaper',
         name='Personal LaTeX Whitepaper',
         font='STIX Two',
+        fontpackage=r'\usepackage{stix2}',
         fontsize=10,
         linewidth=0.4,
         figure_widths={'twocolumn_single': 3.1875,

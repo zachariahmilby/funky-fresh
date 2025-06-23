@@ -23,9 +23,10 @@ def get_available_styles() -> list[str]:
 
 def set_style(name: str,
               fontsize: int | float = None,
+              fontpackage: str = None,
               presentation: bool = False,
               silent: bool = False) -> None:
-    """
+    r"""
     Change Matplotlib runtime configuration parameters (rcParams) to match a
     journal style.
 
@@ -36,6 +37,10 @@ def set_style(name: str,
         using `get_available_styles()`.
     fontsize : int or float, optional
         Set the fontsize if you want to override the default.
+    fontpackage : str, optional
+        Set the LaTeX font package if you want to override the default. For
+        example, to specify the STIX fonts, you would pass `
+        r'\usepackage{stix}'`.
     presentation : bool
         If `True`, fonts are set to the sans-serif font 'Fira Sans'.
     silent : bool
@@ -51,5 +56,6 @@ def set_style(name: str,
     plt.style.use('default')  # reset rcParams before applying new settings
     style = styles[name]
     style.set_style(fontsize=fontsize,
+                    fontpackage=fontpackage,
                     presentation=presentation,
                     silent=silent)

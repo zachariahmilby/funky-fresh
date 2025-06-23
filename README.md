@@ -102,12 +102,24 @@ You can then set `plt.plot(..., color=agu_blue, ...)`.
 For each style, you can also toggle `presentation=True` which will change the
 fonts to Helvetica. See the example in the next section.
 
+### Overriding the Style Default Font
+If you want to use a particular style's settings, but want a different font 
+package than the one I specified, you can use the `fontpackage` keyword 
+argument to specify a different package. For example, even though the standard
+Caltech thesis style uses Times New Roman fonts, I decided to use STIX Two 
+instead, so I loaded the `'Caltech Thesis'` style, but then passed 
+`fontpackage=r'\usepackage{stix2}'` to change the font.
+
 >**CAUTION**<br>
 > Fonts are not necessarily comprehensive and not all symbols may be available! 
 > For Greek characters, I've established the following syntax: upright versions
 > using the addition of `up` before the name, e.g., `$\upgamma$` for an 
 > upright γ or `$\upGamma$` an upright Γ. To make these (or their standard 
 > italic versions) bold, use `\boldsymbol` before, e.g., `$\boldsymbol\Delta$`.
+> If you change the font package as described above, these definitions likely
+> won't work any longer. If you want to use μm as an abbreviation for 
+> "micrometers", you should use `\textmu{m}` rather than `$\mu$m` so you get 
+> the proper upright, serif letter.
 
 ## Example
 Let's say for some reason I want a plot of one period of a sine wave for a 
