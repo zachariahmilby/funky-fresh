@@ -183,6 +183,8 @@ class _Style:
         """
         if fontsize is not None:
             self._fontsize = fontsize
+        if fontpackage is None:
+            fontpackage = self._fontpackage
         stylesheet = self._make_stylesheet(fontpackage=fontpackage,
                                            presentation=presentation)
         if not silent:
