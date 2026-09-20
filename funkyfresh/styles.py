@@ -88,7 +88,8 @@ class _Style:
         else:
             filename = f'{self._font.replace(" ", "").lower()}_preamble.tex'
             font_preamble = Path(path, filename)
-        preamble += fontpackage
+        if not presentation:
+            preamble += fontpackage
         preamble += open(font_preamble, 'r').read()
         return preamble.replace('\n', '')
 
@@ -152,7 +153,7 @@ class _Style:
             os.remove(outfile)
         with open(outfile, 'w') as file:
             file.write(default_style)
-        return outfile
+        return outfile, replacements['[preamble]']
 
     def set_style(self,
                   fontsize: int | float = None,
@@ -185,13 +186,14 @@ class _Style:
             self._fontsize = fontsize
         if fontpackage is None:
             fontpackage = self._fontpackage
-        stylesheet = self._make_stylesheet(fontpackage=fontpackage,
-                                           presentation=presentation)
+        stylesheet, preamble = self._make_stylesheet(fontpackage=fontpackage,
+                                                     presentation=presentation)
         if not silent:
             print('Loading FunkyFresh style...')
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", category=UserWarning)
             plt.style.use(stylesheet)
+        plt.rcParams['text.latex.preamble'] = preamble
         if not silent:
             print(self.__str__())
         os.remove(stylesheet)
@@ -205,7 +207,7 @@ styles: dict[str, _Style] = {
         key='A&A',
         name='Astronomy & Astrophysics',
         font='Times New Roman',
-        fontpackage=r'\usepackage{txfonts}',
+        fontpackage=r'\usepackage{stix}',
         fontsize=9,
         linewidth=0.5,
         figure_widths={'column': 3.543, 'page': 7.283},
@@ -215,7 +217,7 @@ styles: dict[str, _Style] = {
         key='AAS',
         name='American Astronomical Society',
         font='Times New Roman',
-        fontpackage=r'\usepackage{txfonts}',
+        fontpackage=r'\usepackage{stix}',
         fontsize=8,
         linewidth=0.397,
         figure_widths={'column': 3.5, 'page': 7.3},
@@ -224,7 +226,7 @@ styles: dict[str, _Style] = {
         key='AGU',
         name='American Geophysical Union',
         font='Times New Roman',
-        fontpackage=r'\usepackage{txfonts}',
+        fontpackage=r'\usepackage{stix}',
         fontsize=8,
         linewidth=0.5,
         figure_widths={'column': 3.5, 'text': 5.6, 'page': 7.5},
@@ -234,7 +236,7 @@ styles: dict[str, _Style] = {
         key='Caltech Thesis',
         name='Caltech Thesis',
         font='Times New Roman',
-        fontpackage=r'\usepackage{txfonts}',
+        fontpackage=r'\usepackage{stix}',
         fontsize=12,
         linewidth=0.4,
         figure_widths={'text': 6},
@@ -262,7 +264,7 @@ styles: dict[str, _Style] = {
         key='MNRAS',
         name='Monthly Notices of the Royal Astronomical Society',
         font='Times New Roman',
-        fontpackage=r'\usepackage{txfonts}',
+        fontpackage=r'\usepackage{stix}',
         fontsize=8,
         linewidth=0.5,
         figure_widths={'column': 3.4, 'page': 7.05},
